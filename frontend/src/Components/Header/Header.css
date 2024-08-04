@@ -1,0 +1,181 @@
+header {
+  font-family: var(--font-family-primary);
+  background-color: var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 5%;
+  color: var(--white-color);
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-shadow: 0px 0px 15px var(--accent-color-1);
+}
+header .head-all {
+  flex: 1;
+}
+header h2 {
+  text-align: center;
+  cursor: pointer;
+}
+header h2 span {
+  color: var(--accent-color-1);
+}
+header .search-bar {
+  width: 30%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  animation: searchAppear 0.3s ease forwards;
+  box-shadow: 0px 0px 20px var(--accent-color-1);
+}
+.search-bar #searchBar {
+  width: 90%;
+  padding: 0.5em;
+  border-radius: 10px 0px 0px 10px;
+  outline: none;
+  border: none;
+}
+.search-bar .search-close {
+  width: 10%;
+  background-color: white;
+  border: none;
+}
+.search-close:hover {
+  text-shadow: 0px 0px 2px red;
+}
+
+@keyframes searchAppear {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 30%;
+  }
+}
+
+header .nav {
+  display: flex;
+  justify-content: space-around;
+  height: 100%;
+  align-items: center;
+}
+header .login-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  width: 50%;
+  align-items: center;
+}
+.login-nav-icon {
+  transition: all 0.3s ease;
+  border-radius: 10px;
+}
+.login-nav-icon:hover {
+  padding: 0.5em;
+  color: var(--accent-color-2);
+  box-shadow: 0px 0px 10px var(--accent-color-2);
+}
+
+header a {
+  color: var(--accent-color-1);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  transition: color 0.3s ease;
+}
+header .dropdown-menu,
+.search {
+  color: var(--accent-color-1);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+.drop {
+  display: none;
+  position: absolute;
+  top: 100%;
+  overflow: hidden;
+  box-shadow: 0px 0px 10px;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--primary-color);
+  animation: drop 0.3s linear;
+  height: 400%;
+}
+.dropdown {
+  padding: 10px;
+  height: fit-content;
+}
+@keyframes drop {
+  from {
+    height: 0%;
+  }
+  to {
+    height: 400%;
+  }
+}
+.dropdown-menu:hover .drop {
+  display: block;
+}
+header a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  transition: width 0.3s ease;
+}
+header a:hover {
+  color: var(--accent-color-2);
+}
+header a:hover::after {
+  width: 100%;
+  background-color: var(--accent-color-2);
+}
+.dropdown-menu::after,
+.search::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+  transition: width 0.3s ease;
+}
+.dropdown-menu:hover,
+.search:hover {
+  color: var(--accent-color-2);
+  /* text-shadow: 0px 0px 5px; */
+}
+.dropdown-menu:hover::after,
+.search:hover::after {
+  width: 100%;
+  background-color: var(--accent-color-2);
+}
+
+header .head-start {
+  text-align: start;
+}
+header .head-end {
+  justify-content: end;
+}

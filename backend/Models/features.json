@@ -1,0 +1,52 @@
+[
+  {
+    "featureImage": "url-to-image11",
+    "featureTitle": "Personalized Recommendations",
+    "featureDescription": "Receive personalized product recommendations based on your browsing history, purchase patterns, and preferences. Discover items tailored just for you."
+  },
+  {
+    "featureImage": "url-to-image10",
+    "featureTitle": "Direct Connection to End Users",
+    "featureDescription": "Communicate directly with sellers and buyers through our platform. Ask questions, negotiate prices, and finalize deals in real-time."
+  },
+  {
+    "featureImage": "url-to-image9",
+    "featureTitle": "24/7 Customer Support",
+    "featureDescription": "Get assistance anytime with our 24/7 customer support. We're here to help you with any issues or queries."
+  },
+  {
+    "featureImage": "url-to-image7",
+    "featureTitle": "Customer Reviews and Ratings",
+    "featureDescription": "Read customer reviews and ratings before making a purchase. Share your feedback and help others make informed decisions."
+  },
+  {
+    "featureImage": "url-to-image5",
+    "featureTitle": "Wide Range of Products",
+    "featuredescription": "Explore a vast collection of products across various categories including electronics, fashion, home and garden, and more."
+  },
+  {
+    "featureImage": "url-to-image3",
+    "featureTitle": "Order Tracking",
+    "featureDescription": "Track your orders in real-time from the moment you place them until they are delivered to your doorstep."
+  },
+  {
+    "featureImage": "url-to-image4",
+    "featureTitle": "User-Friendly Interface",
+    "featureDescription": "Navigate through a clean and intuitive interface that makes shopping easy and enjoyable."
+  },
+  {
+    "featureImage": "url-to-image1",
+    "featureTitle": "Online Payment with Razorpay",
+    "featureDescription": "Seamlessly pay for your orders using Razorpay. Enjoy secure and quick transactions for all your purchases."
+  },
+  {
+    "featureImage": "url-to-image2",
+    "featureTitle": "Order Return Options",
+    "featureDescription": "Hassle-free return options for all your orders. Request a return within the specified period if you are not satisfied with the product."
+  },
+  {
+    "featureImage": "url-to-image12",
+    "featureTitle": "Local and Domestic Sellers",
+    "featureDescription": "Buy products from local sellers and support your community, or choose from a wide range of products from domestic sellers for more options. Sellers can start local and switch to domestic to reach a wider audience as they grow."
+  }
+]
