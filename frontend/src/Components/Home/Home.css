@@ -1,0 +1,74 @@
+/* Home Page  */
+
+/* Welcome Box  */
+
+.home-welcome-box {
+  width: 90vw;
+  min-height: 200px;
+  line-height: 1.6;
+  text-align: center;
+  display: flex;
+  color: var(--white-color);
+  background-color: var(--primary-color);
+  animation: op-scale-openning 1s;
+}
+.welcome-title {
+  line-height: 1.2;
+}
+.home-welcome-box button {
+  font-size: 18px;
+  width: 200px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Features  */
+
+.home-features-container {
+  animation: op-scale-openning 1s;
+}
+.home-features {
+  flex-wrap: wrap;
+}
+.home-features .feature-box {
+  width: 20vw;
+  min-height: 400px;
+  line-height: 1.6;
+  text-align: center;
+  animation: op-scale-openning 1s;
+}
+.feature-box img{
+  width: 100px;
+  height: 100px;
+}
+
+/* Best Deals */
+.home-best-deals{
+  width: 90vw;
+}
+.best-deals-nav{
+  width: 90%;
+  margin: 0 5%;
+  margin-bottom: 10px;
+}
+.best-deals-nav button{
+  font-size: 18px;
+}
+.best-deals-empty{
+  width: 90%;
+  height: 300px;
+  margin: 0 4.5%;
+}
+
+/* Recommendations */
+
+.home-page-recommendations{
+  width: 90vw;
+  animation: op-scale-openning 1s;
+}
+
+/* Best Sellers */
+
+.home-best-sellers{
+  width: 90vw;
+  animation: op-scale-openning 1s;
+}

@@ -1,0 +1,81 @@
+.account-page {
+  display: flex;
+  min-height: 80vh;
+}
+.account-nav-holder {
+  min-width: 20%;
+  box-shadow: 0px 0px 10px hsl(0, 0%, 0%, 0.5);
+  padding-bottom: 20px;
+  transition: all 0.3s;
+  animation: nav-openning 0.3s;
+  text-wrap: nowrap;
+}
+.account-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: sticky;
+  top: 60px;
+  height: fit-content;
+  overflow: hidden;
+}
+.account-nav a,
+.account-nav p {
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px 2px;
+  transition: all 0.3s;
+}
+.account-nav a {
+  text-decoration: none;
+  color: var(--black-color);
+}
+
+.account-nav a:hover,
+.account-nav p:hover {
+  background-color: var(--accent-color-1);
+  color: var(--white-color);
+}
+.account-section-active {
+  background-color: var(--accent-color-1);
+  color: var(--white-color) !important;
+}
+.account-nav p {
+  cursor: pointer;
+}
+.account-nav h2 {
+  padding: 0.8em 0 0.8em 0;
+  border-bottom: 1px solid;
+}
+.account-nav h2 svg {
+  color: var(--accent-color-1);
+}
+.account-nav svg {
+  margin-right: 10px;
+}
+.account-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 10px;
+  /* over */
+  height: 150px;
+  animation: options-openning 0.3s ease;
+}
+@keyframes options-openning {
+  from {
+    height: 0;
+  }
+  to {
+    height: 150px;
+  }
+}
+
+.account-page-content {
+  flex-grow: 1;
+  padding: 10px;
+}

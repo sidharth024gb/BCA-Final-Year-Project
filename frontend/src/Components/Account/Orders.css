@@ -1,0 +1,96 @@
+/* All Sell Section */
+
+.orders-page {
+  min-height: 80vh;
+  transition: all 0.3s;
+}
+.orders-filters {
+  position: sticky;
+  top: 70px;
+  z-index: 1;
+  background-color: var(--background-color);
+  animation: op-scale-openning 0.3s;
+}
+.orders-filters-container select {
+  padding: 5px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  outline: 1px solid var(--accent-color-1);
+}
+
+/* Orders Container */
+
+.orders-container {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  text-wrap: nowrap;
+  animation: op-scale-openning 0.3s;
+  min-height: 70vh;
+}
+.orders-order {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  animation: op-scale-openning 0.3s;
+  gap: 10px;
+}
+.orders-order-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  /* align-items: start; */
+}
+.order-img-height-adjust {
+  grid-template-rows: auto 30vh;
+}
+.orders-order-group-field img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.orders-order-group-field h3 {
+  margin: 0;
+}
+.orders-order-group-field {
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.orders-order-group-buttons {
+  gap: 10px;
+}
+
+/* Orders Popup */
+
+.orders-popup-box form {
+  flex: 1;
+}
+.orders-popup-box textarea,
+.orders-popup-box select {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 5px;
+}
+.orders-popup-box textarea{
+  resize: vertical;
+  min-width: 30vw;
+  min-height: 50px;
+}
+.orders-popup-box select {
+  width: 30vw;
+}
+.orders-popup-box textarea:hover,
+.orders-popup-box select:hover,
+.orders-popup-box textarea:focus,
+.orders-popup-box select:focus {
+  outline: 2px solid var(--accent-color-1);
+}
+.orders-popup-group{
+  display: flex;
+  flex: 1;
+  align-items: center;
+}

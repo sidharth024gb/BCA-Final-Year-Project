@@ -1,0 +1,59 @@
+/* User Preview */
+
+.user-preview-page .user-preview-details,
+.user-preview-page .user-preview-listed-items,
+.user-preview-page hr {
+  width: 90vw;
+}
+.user-preview-page hr {
+  border: 1px solid var(--accent-color-1);
+}
+.user-preview-details {
+  display: flex;
+}
+.user-preview-details .user-preview-image {
+  width: 40%;
+}
+.user-preview-details .user-preview-image img {
+  width: 100%;
+  height: 70vh;
+  border-radius: 50%;
+}
+.user-preview-image,
+.user-preview-content,
+.user-preview-listed-items,
+.user-preview-page hr {
+  animation: op-scale-openning 0.3s;
+}
+
+/* .user-preview-page>*{
+    border: 1px solid;
+} */
+
+.user-preview-content {
+  line-height: 1.6;
+  align-items: initial !important;
+}
+.user-preview-end-text {
+  align-items: flex-end !important;
+}
+.user-preview-title h1 {
+  font-size: 50px;
+}
+.user-preview-content h2 {
+  font-size: 30px;
+}
+.user-preview-listed-items h1 {
+  padding: 10px;
+}
+.user-preview-carousel-nav {
+  margin: 0 5%;
+}
+.user-preview-carousel-nav button{
+  font-size: 18px;
+}
+.user-preview-empty-listed-items {
+  width: 90%;
+  margin: 10px;
+  height: 40vh;
+}

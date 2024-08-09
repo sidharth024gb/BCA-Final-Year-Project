@@ -10,23 +10,35 @@ import Products from "./Components/Products/Products.jsx";
 import UserPreview from "./Components/UserPreview/UserPreview.jsx";
 import Card from "./Components/Card/Card.jsx";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute.jsx";
+import Aboutus from "./Components/WebsiteInfo/Aboutus.jsx";
+import TermsAndConditions from "./Components/WebsiteInfo/TermsAndConditions.jsx";
+import PrivacyPolicy from "./Components/WebsiteInfo/PrivacyPolicy.jsx";
+import AlertBox from "./Components/AlertBox/AlertBox.jsx";
 
 function AppWrapper() {
   const navigate = useNavigate();
   return (
     <AppProvider navigate={navigate}>
-      <Header />
-      <Routes>
-        <Route path="/form" element={<Form />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/userpreview" element={<UserPreview />} />
-        <Route path="/card" element={<Card />} />
-        <Route element={<ProtectedRoute />}>
-          <Route path="/account/*" element={<Account />} />
-        </Route>
-      </Routes>
-      <Footer />
+      <AlertBox />
+      <div id="alert-blur">
+        <Header />
+        <div className="app-body">
+          <Routes>
+            <Route path="/form" element={<Form />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/userpreview" element={<UserPreview />} />
+            <Route path="/card" element={<Card />} />
+            <Route path="/aboutus" element={<Aboutus />} />
+            <Route path="/tac" element={<TermsAndConditions />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/account/*" element={<Account />} />
+            </Route>
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </AppProvider>
   );
 }

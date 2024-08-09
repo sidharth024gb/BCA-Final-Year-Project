@@ -34,6 +34,7 @@ export const AppProvider = ({ children, navigate }) => {
   const [user, setUser] = useState();
   const profileImageAccessUrl = "http://localhost:8000/profileImages/";
   const itemImageAccessUrl = "http://localhost:8000/itemImages/";
+  const featureImageAccessUrl = "http://localhost:8000/features/";
   const [itemAddForm, setItemAddForm] = useState({
     itemImage: "",
     itemName: "",
@@ -71,6 +72,15 @@ export const AppProvider = ({ children, navigate }) => {
   const [bestSellers, setBestSellers] = useState([]);
   const [recommendations, setRecommendations] = useState([]);
   const [features, setFeatures] = useState([]);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [rejection, setRejection] = useState(null);
+  const [cartInfo, setCartInfo] = useState({
+    discounts: 0,
+    deliveryCharges: 0,
+    subtotal: 0,
+    total: 0,
+  });
+  const [showAlertBox, setShowAlertBox] = useState(false);
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -99,6 +109,43 @@ export const AppProvider = ({ children, navigate }) => {
     localStorage.removeItem("authToken");
     setAuthToken("");
     setUser(null);
+    window.location.reload();
+  }
+
+  function capitalizeFirstLetter(string) {
+    if (!string) return "";
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  function alertBox(message) {
+    setShowAlertBox(true);
+    document.getElementById("alert-message").textContent = message;
+  }
+
+  useEffect(() => {
+    if (showAlertBox) {
+      document.getElementById("alert-blur").style.filter = "blur(5px)";
+    }
+    if (!showAlertBox) {
+      document.getElementById("alert-blur").style.filter = "";
+    }
+  }, [showAlertBox]);
+
+  function calculate_Rating(ratings) {
+    if (ratings.length === 0) {
+      return 0;
+    }
+
+    const rating = ratings.reduce((acc, eachRating) => {
+      acc += eachRating.rating;
+      return acc;
+    }, 0);
+
+    return rating / ratings.length;
+  }
+
+  function calculate_Discount(price, discount) {
+    return parseInt(price - price * (discount / 100));
   }
 
   function filterListedItems() {
@@ -133,19 +180,71 @@ export const AppProvider = ({ children, navigate }) => {
                 .filter((item) => item)
             : [])
     );
+
+    const cartInfoFilter =
+      products && user
+        ? user.cart
+            .map((cartItem) => {
+              const itemCategory = products[cartItem.category] || [];
+              return itemCategory.find(
+                (item) => item.item_id === cartItem.item_id
+              );
+            })
+            .filter((item) => item)
+            .reduce(
+              (info, item) => {
+                const quantity = user.cart?.find(
+                  (cartItem) => cartItem.item_id === item.item_id
+                ).quantity;
+                const priceAfterDiscount = parseInt(
+                  item.price * (1 - item.discount / 100)
+                );
+                info.discounts +=
+                  parseInt(item.price * (item.discount / 100)) * quantity;
+                info.deliveryCharges += item.deliveryCharge;
+                info.subtotal += priceAfterDiscount * quantity;
+                info.total +=
+                  priceAfterDiscount * quantity + item.deliveryCharge;
+                return info;
+              },
+              {
+                discounts: 0,
+                deliveryCharges: 0,
+                subtotal: 0,
+                total: 0,
+              }
+            )
+        : {
+            discounts: 0,
+            deliveryCharges: 0,
+            subtotal: 0,
+            total: 0,
+          };
+
+    setCartInfo(cartInfoFilter);
   }
 
-  function timestampToDate(timestamp) {
+  function timestampToDate(timestamp, time) {
     const date = new Date(timestamp);
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-      hour12: true,
-    };
+    let options;
+    if (time) {
+      options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: true,
+      };
+    } else {
+      options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      };
+    }
+
     return date.toLocaleString("en-GB", options);
   }
 
@@ -163,6 +262,8 @@ export const AppProvider = ({ children, navigate }) => {
           order.returnStatus === orderStatusFilter
       );
     }
+
+    window.scrollTo(0, 0);
 
     return ordersToFilter;
   }
@@ -190,9 +291,32 @@ export const AppProvider = ({ children, navigate }) => {
         "http://localhost:8000/homepage/content"
       );
       setBestSellers(response.data.bestSellers);
-      setBestDeals(response.data.bestDeals);
       setFeatures(response.data.features);
-      // console.log("sellers", response.data);
+
+      if (authToken && user) {
+        const filteredBestDeals = Object.keys(response.data.bestDeals).reduce(
+          (filteredData, category) => {
+            if (Array.isArray(response.data.bestDeals[category])) {
+              const filteredCategory = response.data.bestDeals[category].filter(
+                (item) =>
+                  item.location === user.location ||
+                  item.deliveryOption === "domestic"
+              );
+
+              filteredData[category] = filteredCategory;
+            } else {
+              console.log("not array");
+            }
+
+            return filteredData;
+          },
+          {}
+        );
+
+        setBestDeals(filteredBestDeals);
+      } else {
+        setBestDeals(response.data.bestDeals);
+      }
 
       if (authToken) {
         const response2 = await axios.post(
@@ -237,7 +361,7 @@ export const AppProvider = ({ children, navigate }) => {
 
   function handleRating(id, rateItem, category, rating) {
     if (!authToken) {
-      return alert("Please login or signup to give Rating");
+      return alertBox("Please login or signup to give Rating");
     }
 
     axios
@@ -252,15 +376,16 @@ export const AppProvider = ({ children, navigate }) => {
       )
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           if (rateItem === "user") {
             getUser();
           }
           if (rateItem === "product") {
             getProducts();
           }
+          setIsRating(false);
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -276,7 +401,7 @@ export const AppProvider = ({ children, navigate }) => {
         if (res.data.success) {
           traderData = res.data.traderData;
         } else if (res.status === 404) {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -317,17 +442,18 @@ export const AppProvider = ({ children, navigate }) => {
         })
         .then((res) => {
           if (res.data.success) {
-            alert(res.data.message);
+            alertBox(res.data.message);
             getUser();
+            setProfileEditForm(null);
           } else {
-            alert(res.data.message);
+            alertBox(res.data.message);
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      alert("Please fill all the fields");
+      alertBox("Please fill all the fields");
     }
   }
 
@@ -340,13 +466,14 @@ export const AppProvider = ({ children, navigate }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           localStorage.removeItem("authToken");
           setAuthToken(null);
           setUser(null);
           navigate("/");
+          window.location.reload();
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -375,7 +502,7 @@ export const AppProvider = ({ children, navigate }) => {
                 // key: "",
                 amount: orderDetails.amount,
                 currency: orderDetails.currency,
-                name: "Orgin Trade",
+                name: "TradeConnect",
                 description: "Testing Transactions",
                 image:
                   "https://images-na.ssl-images-amazon.com/images/I/817tHNcyAgL.jpg",
@@ -394,10 +521,11 @@ export const AppProvider = ({ children, navigate }) => {
                       )
                       .then(async (res) => {
                         if (res.data.success) {
-                          alert(res.data.message);
+                          alertBox(res.data.message);
                           await getUser();
+                          setIsCheckingOut(false);
                         } else {
-                          alert(res.data.message);
+                          alertBox(res.data.message);
                         }
                       });
                   } catch (err) {
@@ -417,7 +545,7 @@ export const AppProvider = ({ children, navigate }) => {
               const rzp1 = new window.Razorpay(options);
               rzp1.open();
             } else {
-              alert(res.data.message);
+              alertBox(res.data.message);
             }
           })
           .catch((err) => {
@@ -433,10 +561,11 @@ export const AppProvider = ({ children, navigate }) => {
           })
           .then(async (res) => {
             if (res.data.success) {
-              alert(res.data.message);
+              alertBox(res.data.message);
+              setIsCheckingOut(false);
               await getUser();
             } else {
-              alert(res.data.message);
+              alertBox(res.data.message);
             }
           })
           .catch((err) => {
@@ -445,7 +574,7 @@ export const AppProvider = ({ children, navigate }) => {
       }
       getUser();
     } else {
-      alert("Please fill all the fields");
+      alertBox("Please fill all the fields");
     }
   }
 
@@ -453,7 +582,7 @@ export const AppProvider = ({ children, navigate }) => {
     e.preventDefault();
 
     if (!cancelDetails.cancelReason) {
-      return alert("Please provide Reason");
+      return alertBox("Please provide Reason");
     }
     axios
       .put("http://localhost:8000/order/cancel", cancelDetails, {
@@ -463,10 +592,11 @@ export const AppProvider = ({ children, navigate }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getUser();
+          setIsCancel(null);
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -486,10 +616,11 @@ export const AppProvider = ({ children, navigate }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getUser();
+          setOrderStatus(null);
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -510,10 +641,11 @@ export const AppProvider = ({ children, navigate }) => {
       )
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getUser();
+          setOrderStatus(null);
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -525,7 +657,7 @@ export const AppProvider = ({ children, navigate }) => {
     e.preventDefault();
 
     if (!returnOrder.returnReason) {
-      return alert("Please provide a reason");
+      return alertBox("Please provide a reason");
     }
     axios
       .put("http://localhost:8000/order/return/request", returnOrder, {
@@ -535,10 +667,11 @@ export const AppProvider = ({ children, navigate }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getUser();
+          setReturnOrder(null);
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -548,7 +681,7 @@ export const AppProvider = ({ children, navigate }) => {
 
   function updateReturnStatus(dataToSend) {
     if (!dataToSend.rejectionReason) {
-      return alert("Please provide a reason");
+      return alertBox("Please provide a reason");
     }
 
     axios
@@ -559,10 +692,11 @@ export const AppProvider = ({ children, navigate }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getUser();
+          setRejection(null);
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -584,17 +718,17 @@ export const AppProvider = ({ children, navigate }) => {
         )
         .then((res) => {
           if (res.data.success) {
-            alert(res.data.message);
+            alertBox(res.data.message);
             getUser();
           } else {
-            alert(res.data.message);
+            alertBox(res.data.message);
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      alert("Please Login or Sign up to purchase a product");
+      alertBox("Please Login or Sign up to purchase a product");
     }
   }
 
@@ -611,11 +745,11 @@ export const AppProvider = ({ children, navigate }) => {
       )
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getUser();
           filterCart();
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -642,7 +776,7 @@ export const AppProvider = ({ children, navigate }) => {
         if (res.data.success) {
           getUser();
         } else {
-          alert(res.data.message);
+          alertBox(res.data.message);
         }
       })
       .catch((err) => {
@@ -671,6 +805,11 @@ export const AppProvider = ({ children, navigate }) => {
       itemAddForm.category &&
       itemAddForm.condition
     ) {
+      if (itemAddForm.discount) {
+        if (itemAddForm.discount > 100) {
+          return alertBox("Discount can be equal to or less then 100");
+        }
+      }
       axios
         .put("http://localhost:8000/item/add", itemToAdd, {
           headers: {
@@ -679,19 +818,19 @@ export const AppProvider = ({ children, navigate }) => {
         })
         .then((res) => {
           if (res.data.success) {
-            alert(res.data.message);
+            alertBox(res.data.message);
             getProducts();
             getUser();
             filterListedItems();
           } else {
-            alert(res.data.message);
+            alertBox(res.data.message);
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      alert("Please fill out all required fields");
+      alertBox("Please fill out all required fields");
     }
   }
 
@@ -718,6 +857,11 @@ export const AppProvider = ({ children, navigate }) => {
       itemEditForm.deliveryOption &&
       itemEditForm.deliveryCharge >= 0
     ) {
+      if (itemEditForm.discount) {
+        if (itemEditForm.discount > 100) {
+          return alertBox("Discount can be equal to or less then 100");
+        }
+      }
       await axios
         .put("http://localhost:8000/item/update", itemToUpdate, {
           headers: {
@@ -726,19 +870,20 @@ export const AppProvider = ({ children, navigate }) => {
         })
         .then((res) => {
           if (res.data.success) {
-            alert(res.data.message);
+            alertBox(res.data.message);
             getProducts();
             getUser();
             filterListedItems();
+            setItemEditForm(null);
           } else {
-            alert(res.data.message);
+            alertBox(res.data.message);
           }
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
-      alert("Please fill out all fields");
+      alertBox("Please fill out all fields");
     }
   }
 
@@ -752,7 +897,7 @@ export const AppProvider = ({ children, navigate }) => {
       })
       .then((res) => {
         if (res.data.success) {
-          alert(res.data.message);
+          alertBox(res.data.message);
           getProducts();
           getUser();
           filterListedItems();
@@ -803,10 +948,10 @@ export const AppProvider = ({ children, navigate }) => {
               if (res.data.success) {
                 localStorage.setItem("authToken", res.data.token);
                 setAuthToken(res.data.token);
-                alert(res.data.message);
+                alertBox(res.data.message);
                 navigate("/");
               } else {
-                alert(res.data.message);
+                alertBox(res.data.message);
               }
             })
             .catch((err) => {
@@ -820,10 +965,10 @@ export const AppProvider = ({ children, navigate }) => {
               }
             });
         } else {
-          alert("Password and Confirm Password do not match");
+          alertBox("Password and Confirm Password do not match");
         }
       } else {
-        alert("Please fill all the required fields");
+        alertBox("Please fill all the required fields");
       }
     }
 
@@ -835,10 +980,10 @@ export const AppProvider = ({ children, navigate }) => {
             if (res.data.success) {
               localStorage.setItem("authToken", res.data.token);
               setAuthToken(res.data.token);
-              alert(res.data.message);
+              alertBox(res.data.message);
               navigate("/");
             } else {
-              alert(res.data.message);
+              alertBox(res.data.message);
             }
           })
           .catch((err) => {
@@ -852,7 +997,7 @@ export const AppProvider = ({ children, navigate }) => {
             }
           });
       } else {
-        alert("Please fill all the required fields");
+        alertBox("Please fill all the required fields");
       }
     }
   }
@@ -922,6 +1067,17 @@ export const AppProvider = ({ children, navigate }) => {
         getHomePageContent,
         recommendations,
         features,
+        calculate_Rating,
+        calculate_Discount,
+        deleteConfirm,
+        setDeleteConfirm,
+        cartInfo,
+        rejection,
+        setRejection,
+        capitalizeFirstLetter,
+        featureImageAccessUrl,
+        setShowAlertBox,
+        showAlertBox,
       }}
     >
       {children}

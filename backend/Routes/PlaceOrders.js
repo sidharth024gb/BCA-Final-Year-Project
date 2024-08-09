@@ -30,8 +30,12 @@ router.post("/online/create", async (req, res) => {
             (i) => i.item_id === orderItem.item_id
           );
           if (item) {
-            const price = item.price - item.price * (item.discount / 100);
-            const totalPrice = price * orderItem.quantity + item.deliveryCharge;
+            const price = parseInt(
+              item.price - item.price * (item.discount / 100)
+            );
+            const totalPrice = parseInt(
+              price * orderItem.quantity + item.deliveryCharge
+            );
 
             amount += totalPrice;
           }
@@ -44,7 +48,7 @@ router.post("/online/create", async (req, res) => {
       });
 
       const options = {
-        amount: amount * 100,
+        amount: parseInt(amount) * 100,
         currency: "INR",
         receipt: crypto.randomBytes(10).toString("hex"),
         notes: {
@@ -98,10 +102,12 @@ router.post("/online/verify", async (req, res) => {
 
           if (orderItem) {
             orderItem.bought += 1;
-            const price =
-              orderItem.price - orderItem.price * (orderItem.discount / 100);
-            const totalPrice =
-              price * orderItemDetails.quantity + orderItem.deliveryCharge;
+            const price = parseInt(
+              orderItem.price - orderItem.price * (orderItem.discount / 100)
+            );
+            const totalPrice = parseInt(
+              price * orderItemDetails.quantity + orderItem.deliveryCharge
+            );
 
             const buyer = await usersData.findOne({
               user_id: req.user.user_id,
@@ -133,7 +139,7 @@ router.post("/online/verify", async (req, res) => {
               phone: seller.phone,
               address: seller.address,
               profileImage: seller.profileImage,
-              returnPolicy:seller.returnPolicy,
+              returnPolicy: seller.returnPolicy,
               location: seller.location,
             };
 
@@ -221,10 +227,12 @@ router.post("/cash", async (req, res) => {
 
         if (orderItem) {
           orderItem.bought += 1;
-          const price =
-            orderItem.price - orderItem.price * (orderItem.discount / 100);
-          const totalPrice =
-            price * orderItemDetails.quantity + orderItem.deliveryCharge;
+          const price = parseInt(
+            orderItem.price - orderItem.price * (orderItem.discount / 100)
+          );
+          const totalPrice = parseInt(
+            price * orderItemDetails.quantity + orderItem.deliveryCharge
+          );
 
           const buyer = await usersData.findOne({
             user_id: req.user.user_id,

@@ -15,6 +15,7 @@ footer hr {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
   height: 80%;
 }
 .footer-section {
@@ -29,8 +30,8 @@ footer hr {
   height: 100%;
   gap: 20px;
 }
-.footer-social h2{
-    cursor: pointer;
+.footer-social h2 {
+  cursor: pointer;
 }
 .footer-section h2,
 h3 {
@@ -47,17 +48,18 @@ h3 {
   width: 100%;
   justify-content: space-between;
 }
-.footer-icons a{
+.footer-icons a {
   color: var(--white-color);
   font-size: large;
   font-weight: bold;
   padding: 5px 0px 5px 0px;
   transition: color 0.3s ease;
-  transition: padding 0.3s ease;
+  transition: all 0.3s linear;
 }
 .footer-icons a:hover {
   color: var(--accent-color-2);
   padding: 5px;
+  scale:1.3;
   border-radius: 20%;
   box-shadow: 0px 0px 5px var(--accent-color-2);
 }

@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -24,7 +23,40 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>TradeConnect</title>
+    <script>
+      function changeFaviconHue(degree) {
+        const img = document.createElement("img");
+        img.src = "%PUBLIC_URL%/trading.png";
+
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = img.width;
+          canvas.height = img.height;
+
+          ctx.beginPath();
+          ctx.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width, canvas.height) / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+
+          ctx.drawImage(img, 0, 0);
+
+          ctx.globalCompositeOperation = "hue";
+          ctx.fillStyle = `hsl(${degree}, 100%, 50%)`;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+          link.type = "image/png";
+          link.rel = "icon";
+          link.href = canvas.toDataURL("image/png");
+
+          document.getElementsByTagName("head")[0].appendChild(link);
+        };
+      }
+
+      changeFaviconHue(209);
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

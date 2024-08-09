@@ -17,6 +17,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { AppContext } from "../../Context/AppContext";
+import logo from "../../Assets/trading.png";
+
 
 function Footer() {
   const { navigate } = useContext(AppContext);
@@ -24,9 +26,12 @@ function Footer() {
     <footer>
       <div className="footer-container">
         <div className="footer-social">
-          <h2 onClick={() => navigate("/")}>
-            <span>Origin</span>Trade
-          </h2>
+          <div className="website-title flex-center">
+            <img src={logo} alt="logo" className="website-logo" />
+            <h2 onClick={() => navigate("/")}>
+              <span>Trade</span>Connect
+            </h2>
+          </div>
           <div className="footer-icons">
             <a href="/" target="_blank" rel="noopener noreferrer">
               <FontAwesomeIcon icon={faInstagram} />
@@ -84,14 +89,16 @@ function Footer() {
           </div>
           <div className="foot-link">
             <FontAwesomeIcon icon={faEnvelope} />
-            <a href="mailto:support@origintrade.com">support@origintrade.com</a>
+            <a href="mailto:support@tradeconnect.com">
+              support@tradeconnect.com
+            </a>
           </div>
         </div>
       </div>
       <hr />
       <div className="footer-bottom">
         <p>
-          Copyright &copy; {new Date().getFullYear()} OriginTrade || Website
+          Copyright &copy; {new Date().getFullYear()} TradeConnect || Website
           Developed for Final Year project-MERN stack
         </p>
       </div>

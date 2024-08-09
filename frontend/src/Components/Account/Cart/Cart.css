@@ -1,0 +1,116 @@
+/* Cart  */
+
+.cart-container {
+  min-height: 80vh;
+  animation: op-scale-openning 0.3s;
+  display: grid;
+  gap: 10px;
+  transition: all 0.3s;
+}
+
+/* Header And Summary */
+
+.cart-header,
+.cart-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.cart-summary {
+  gap: 10px;
+}
+.cart-header-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart-summary-group {
+  display: flex;
+  align-items: center;
+}
+.cart-summary-group button {
+  font-size: 16px;
+}
+.cart-summary-group span {
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid;
+  padding: 5px;
+  text-align: center;
+}
+.cart-header-group.title {
+  border-bottom: 1px solid var(--accent-color-1);
+}
+.cart-header-group h3 {
+  color: var(--text-secondary-color);
+}
+
+/* Content  */
+
+.cart-item-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.cart-item-container-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cart-item-container-group button {
+  min-width: 10%;
+}
+.cart-item-image {
+  width: 40%;
+}
+.cart-item-image img {
+  width: 100%;
+  display: block;
+}
+
+/* Popup Checkout */
+
+.cart-popup-checkout {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-image: url("../../../Assets/bg-1.jpg");
+  background-size: contain;
+  animation: op-slide-center 0.3s;
+}
+.cart-popup-checkout h2{
+    color: var(--white-color);
+}
+.cart-popup-checkout .cart-popup-form {
+  background-color: hsl(0, 0%, 100%, 0.5);
+  backdrop-filter: blur(5px);
+  padding: 10px;
+  border-radius: 5px;
+  line-height: 2;
+}
+.cart-popup-form-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  text-wrap: nowrap;
+}
+.cart-popup-form-group textarea {
+  resize: vertical;
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 5px;
+  border-radius: 5px;
+}
+.cart-popup-form-group textarea:hover {
+  outline: 2px solid var(--accent-color-2) ;
+}
+.cart-popup-form-group span {
+  flex: 1;
+  border-radius: 5px;
+  border: 1px solid;
+  text-align: center;
+}
+.cart-popup-form-group p{
+    flex-basis: 30%;
+}

@@ -1,0 +1,37 @@
+.alert-box {
+  position: fixed;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--white-color);
+  background-color: var(--primary-color) !important;
+  z-index: 10;
+  width: 40vw;
+  min-width: 300px;
+  animation: alert-openning 0.3s;
+  display: flex;
+  line-height: 1.6;
+}
+@keyframes alert-openning {
+  from {
+    top: 0;
+    opacity: 0;
+  }
+  to {
+    top: 15%;
+    opacity: 1;
+  }
+}
+.alert-box p{
+  margin: 0.8em 0;
+}
+.alert-box h2{
+  margin: 0;
+}
+
+.alert-visible {
+  display: flex;
+}
+.alert-hidden {
+  display: none;
+}

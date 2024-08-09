@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
 import { useLocation, Link } from "react-router-dom";
+import "./Products.css";
 
 function Products() {
   const location = useLocation();
@@ -11,7 +12,9 @@ function Products() {
     itemImageAccessUrl,
     addToCart,
     authToken,
+    calculate_Rating,
     user,
+    calculate_Discount,
     searchTerm,
   } = useContext(AppContext);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -186,155 +189,213 @@ function Products() {
     return dataToFilter;
   }, [filters, filteredProducts]);
 
-  if (filteredProducts.length === 0) {
-    return (
-      <div className="container">
-        <h1>{category}</h1>
-        <h1>No Products Found</h1>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <select
-          name="pricefilter"
-          id="pricefilter"
-          value={filters.price}
-          onChange={(e) => {
-            setFilters((f) => ({ ...f, price: e.target.value }));
-          }}
-        >
-          <option value="">All</option>
-          <option value="low">Lowest to Highest Price</option>
-          <option value="high">Highest to Lowest Price</option>
-        </select>
-        <select
-          name="discountfilter"
-          id="discountfilter"
-          value={filters.discount}
-          onChange={(e) => {
-            setFilters((f) => ({ ...f, discount: e.target.value }));
-          }}
-        >
-          <option value="">All</option>
-          <option value="10">10% - 20% OFF</option>
-          <option value="20">20% - 30% OFF</option>
-          <option value="30">30% - 40% OFF</option>
-          <option value="40">40% - 50% OFF</option>
-          <option value="50">50% or more OFF</option>
-        </select>
-        <select
-          name="conditonfilter"
-          id="conditonfilter"
-          value={filters.condition}
-          onChange={(e) => {
-            setFilters((f) => ({ ...f, condition: e.target.value }));
-          }}
-        >
-          <option value="">All</option>
-          <option value="new">New</option>
-          <option value="used">Used</option>
-          <option value="refurbished">Refurbished</option>
-        </select>
-        <div>
-          <input
-            type="checkbox"
-            name="freedelivery-filter"
-            id="freedelivery-filter"
-            checked={filters.freeDelivery}
-            onChange={(e) => {
-              setFilters((f) => ({ ...f, freeDelivery: !f.freeDelivery }));
-            }}
-          />
-          <label htmlFor="freedelivery-filter">Free Delivery</label>
-        </div>
-        <select
-          name="returnDaysfilter"
-          id="returnDaysfilter"
-          value={filters.returnDays}
-          onChange={(e) => {
-            setFilters((f) => ({ ...f, returnDays: e.target.value }));
-          }}
-        >
-          <option value="">All</option>
-          <option value="0">No Returns</option>
-          <option value="7">1-7 Days</option>
-          <option value="14">7-14 Days</option>
-          <option value="30">14-30 Days</option>
-          <option value="100">More than 30 Days</option>
-        </select>
-        <select
-          name="ratingfilter"
-          id="ratingfilter"
-          value={filters.rating}
-          onChange={(e) => {
-            setFilters((f) => ({ ...f, rating: e.target.value }));
-          }}
-        >
-          <option value="">All</option>
-          <option value="4">4 Stars and above</option>
-          <option value="3">3 Stars and above</option>
-          <option value="2">2 Stars and above</option>
-          <option value="1">1 Star and above</option>
-        </select>
-        <button
-          onClick={() =>
-            setFilters({
-              price: "",
-              discount: "",
-              condition: "",
-              freeDelivery: false,
-              returnDays: "",
-              rating: "",
-            })
-          }
-        >
-          Reset Filters
-        </button>
-      </div>
-      <h1>{category}</h1>
-      {filterAndSortProducts.length > 0 &&
-        filterAndSortProducts.map((product, index) => (
-          <Link to="/card" state={product} key={index}>
-            <div>
-              <h1>{product.itemName}</h1>
-              <h1>{product.tags}</h1>
-              <img
-                src={itemImageAccessUrl + product.itemImage}
-                alt={product.name}
-                style={{
-                  width: "100px",
-                  height: "100px",
+    <div className="products-page">
+      <div className="products-filters-container box-4">
+        <div className="products-filters gap-10">
+          <div className="products-title flex-center">
+            <h2>{category.replace(/_/g, " ")}</h2>
+          </div>
+          <div className="products-filters-group flex-between">
+            <h3>Filters</h3>
+            <button
+              className="btn-accent-2"
+              onClick={() =>
+                setFilters({
+                  price: "",
+                  discount: "",
+                  condition: "",
+                  freeDelivery: false,
+                  returnDays: "",
+                  rating: "",
+                })
+              }
+            >
+              Reset Filters
+            </button>
+          </div>
+          <div className="products-filters-group flex-end">
+            <div className="free-delivery-checkbox flex-center">
+              <input
+                type="checkbox"
+                name="freedelivery-filter"
+                id="freedelivery-filter"
+                checked={filters.freeDelivery}
+                onChange={(e) => {
+                  setFilters((f) => ({ ...f, freeDelivery: !f.freeDelivery }));
                 }}
               />
-              <p>{product.description}</p>
-              <p>{product.seller}</p>
-              <p>{product.price}</p>
-              <p>{product.discount}</p>
-              <p>{product.returnDays}</p>
-              <p>{product.deliveryCharge}</p>
-              <p>{product.condition}</p>
-              <Link to="/userpreview" state={product.seller}>
-                Seller Details
-              </Link>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  addToCart(product.item_id, product.category, product.seller);
-                }}
-              >
-                Add to Cart
-              </button>
+              <label htmlFor="freedelivery-filter">Free Delivery</label>
             </div>
-          </Link>
-        ))}
+          </div>
+          <div className="products-filters-group flex-between">
+            <p>Price:&nbsp;</p>
+            <select
+              name="pricefilter"
+              id="pricefilter"
+              value={filters.price}
+              onChange={(e) => {
+                setFilters((f) => ({ ...f, price: e.target.value }));
+              }}
+            >
+              <option value="">All</option>
+              <option value="low">Lowest to Highest Price</option>
+              <option value="high">Highest to Lowest Price</option>
+            </select>
+          </div>
+          <div className="products-filters-group flex-between">
+            <p>Discount:&nbsp;</p>
+            <select
+              name="discountfilter"
+              id="discountfilter"
+              value={filters.discount}
+              onChange={(e) => {
+                setFilters((f) => ({ ...f, discount: e.target.value }));
+              }}
+            >
+              <option value="">All</option>
+              <option value="10">10% - 20% OFF</option>
+              <option value="20">20% - 30% OFF</option>
+              <option value="30">30% - 40% OFF</option>
+              <option value="40">40% - 50% OFF</option>
+              <option value="50">50% or more OFF</option>
+            </select>
+          </div>
+          <div className="products-filters-group flex-between">
+            <p>Condition:&nbsp;</p>
+            <select
+              name="conditonfilter"
+              id="conditonfilter"
+              value={filters.condition}
+              onChange={(e) => {
+                setFilters((f) => ({ ...f, condition: e.target.value }));
+              }}
+            >
+              <option value="">All</option>
+              <option value="new">New</option>
+              <option value="used">Used</option>
+              <option value="refurbished">Refurbished</option>
+            </select>
+          </div>
+          <div className="products-filters-group flex-between">
+            <p>Rating:&nbsp;</p>
+            <select
+              name="ratingfilter"
+              id="ratingfilter"
+              value={filters.rating}
+              onChange={(e) => {
+                setFilters((f) => ({ ...f, rating: e.target.value }));
+              }}
+            >
+              <option value="">All</option>
+              <option value="4">4 Stars and above</option>
+              <option value="3">3 Stars and above</option>
+              <option value="2">2 Stars and above</option>
+              <option value="1">1 Star and above</option>
+            </select>
+          </div>
+          <div className="products-filters-group flex-between">
+            <p>Return days:&nbsp;</p>
+            <select
+              name="returnDaysfilter"
+              id="returnDaysfilter"
+              value={filters.returnDays}
+              onChange={(e) => {
+                setFilters((f) => ({ ...f, returnDays: e.target.value }));
+              }}
+            >
+              <option value="">All</option>
+              <option value="0">No Returns</option>
+              <option value="7">1-7 Days</option>
+              <option value="14">7-14 Days</option>
+              <option value="30">14-30 Days</option>
+              <option value="100">More than 30 Days</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      {filterAndSortProducts.length === 0 && (
+        <div className="pad-10 flex-1">
+          <div className="empty-page box ">
+            <h1>🍃No Products Found</h1>
+          </div>
+        </div>
+      )}
+      {filterAndSortProducts.length > 0 && (
+        <div className="products-container box-1">
+          {filterAndSortProducts.map((product, index) => (
+            <Link
+              to="/card"
+              state={product}
+              key={product.item_id}
+              className="product-card-holder box-4 remove-padding box-hover-2"
+            >
+              <div className="product-card">
+                <div className="product-card-image box remove-padding box-radius-0">
+                  <img
+                    src={itemImageAccessUrl + product.itemImage}
+                    alt={product.name}
+                  />
+                </div>{
+                  product.discount>0&&
+                <span className="discount">{product.discount}% OFF</span>
+                }
+                <div className="product-card-content box-1">
+                  <div className="product-card-title flex-start">
+                    <h3>{product.itemName}</h3>
+                    <p>
+                      ⭐{calculate_Rating(product.rating)}
+                      <span className="side-small-text">
+                        ({product.rating.length})
+                      </span>
+                    </p>
+                  </div>
+                  <div className="product-card-description flex-end flex-col">
+                    <p>
+                      Price:&nbsp;&#8377;
+                      {calculate_Discount(product.price, product.discount)}
+                      {product.discount > 0 ? (
+                        <span className="org-price">
+                          &#8377;{product.price}
+                        </span>
+                      ) : (
+                        <></>
+                      )}
+                    </p>
+                    <p>
+                      {product.deliveryCharge === 0 ? (
+                        <span className="second">Free Delivery</span>
+                      ) : (
+                        <span>
+                          Delivery Charge:&nbsp;&#8377;{product.deliveryCharge}
+                        </span>
+                      )}
+                    </p>
+                    <p>
+                      Condition:&nbsp;
+                      <span className="accent-1">{product.condition}</span>
+                    </p>
+                    <p>Return Days:&nbsp;{product.returnDays}</p>
+                    <button
+                      className="btn-third"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart(
+                          product.item_id,
+                          product.category,
+                          product.seller
+                        );
+                      }}
+                    >
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -145,13 +145,11 @@ app.get("/homepage/content", async (_, res) => {
       return totalRating / user.rating.length >= 4;
     });
 
-    res
-      .status(200)
-      .send({
-        bestDeals: bestDeals,
-        bestSellers: bestSellers,
-        features: homepageFeatures,
-      });
+    res.status(200).send({
+      bestDeals: bestDeals,
+      bestSellers: bestSellers,
+      features: homepageFeatures,
+    });
   } catch (err) {
     console.log(err);
   }
@@ -460,7 +458,11 @@ app.post("/homepage/recommendations", async (req, res) => {
           const itemTags = item.tags
             .split(",")
             .map((tag) => tag.trim().toLowerCase());
-          return itemTags.some((tag) => productTags.includes(tag));
+          return (
+            itemTags.some((tag) => productTags.includes(tag)) &&
+            (item.location === user.location ||
+              item.deliveryOption === "domestic")
+          );
         });
         if (filteredCategory) {
           filteredItems = filteredItems.concat(filteredCategory);
@@ -724,6 +726,40 @@ app.put("/profile/update", upload, async (req, res) => {
 });
 
 app.delete("/account/delete", async (req, res) => {
+  const user = await usersData.findOne({ user_id: req.user.user_id });
+
+  if (!user) {
+    return res.send({ success: false, messsage: "User Not Found" });
+  }
+
+  if (user.sell.orders.length > 0 || user.buy.orders.length > 0) {
+    return res.send({
+      success: false,
+      message: "Please complete your orders before deleting your account!!!",
+    });
+  }
+
+  const unfinishedSellReturns = user.sell.returns.filter(
+    (order) => order.returnStatus === "requested"
+  );
+  const unfinishedBuyReturns = user.buy.returns.filter(
+    (order) => order.returnStatus === "requested"
+  );
+
+  if (unfinishedBuyReturns.length > 0) {
+    return res.send({
+      success: false,
+      message: "Please complete your buy returns to delete the account!!!",
+    });
+  }
+
+  if (unfinishedSellReturns.length > 0) {
+    return res.send({
+      success: false,
+      message: "Please complete your sell returns to delete the account!!!",
+    });
+  }
+
   await usersData
     .findOneAndDelete({ user_id: req.user.user_id })
     .then(async (userDeleted) => {
@@ -1026,9 +1062,9 @@ app.delete("/item/delete", async (req, res) => {
             { "cart.item_id": item_id },
             { $pull: { ["cart"]: { item_id: item_id } } }
           );
-          res.send({ success: true, message: " item Deleted" });
+          res.send({ success: true, message: " Item Deleted" });
         } else {
-          res.send({ success: false, message: " item not Deleted" });
+          res.send({ success: false, message: " Item not Deleted" });
         }
       })
       .catch((err) => {

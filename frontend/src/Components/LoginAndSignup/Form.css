@@ -79,7 +79,10 @@
 }
 .form input:focus,
 .form textarea:focus,
-.form select:focus {
+.form select:focus,
+.form input:hover,
+.form textarea:hover,
+.form select:hover {
   outline: 2px solid var(--accent-color-2);
 }
 .form input[type="radio"] {
@@ -141,10 +144,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-.required {
-  color: hsl(0, 100%, 50%);
-  font-size: 18px;
 }
 .form-submit {
   border: none;

@@ -1,0 +1,60 @@
+/* Card Page */
+
+/* Card Details */
+
+.card-page-container {
+  display: flex;
+  width: 90vw;
+  gap: 10px;
+  animation: op-scale-openning 0.3s;
+}
+.card-image {
+  width: 50%;
+  height: 80vh;
+}
+.card-image img {
+  width: 100%;
+  height: 100%;
+}
+.card-vertical-line {
+  border: 1px solid var(--accent-color-1);
+}
+
+.card-page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.6;
+}
+.card-head {
+  line-height: 1;
+}
+.card-head h1 {
+  font-size: 5em;
+}
+.card-head h2 {
+  margin: 10px 0;
+  font-size: 3em;
+}
+.card-title p {
+  font-size: 2em;
+  align-items: center;
+}
+.card-page-content button {
+  justify-content: flex-end;
+}
+.card-button {
+  flex: 1;
+  align-items: initial !important;
+}
+
+/* Related Items */
+
+.related-items {
+  width: 90vw;
+  animation: op-scale-openning 0.3s;
+}
+
+.related-items h2 {
+  margin: 10px 0;
+}

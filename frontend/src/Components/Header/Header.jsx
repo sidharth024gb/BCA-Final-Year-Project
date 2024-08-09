@@ -3,10 +3,8 @@ import "./Header.css";
 import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faShoppingCart,
-  faList,
-} from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faList } from "@fortawesome/free-solid-svg-icons";
+import image from "../../Assets/trading.png";
 
 function Header() {
   const {
@@ -15,12 +13,15 @@ function Header() {
     searchVisible,
     setSearchTerm,
     navigate,
+    profileImageAccessUrl,
+    user,
   } = useContext(AppContext);
 
   return (
     <header>
-      <h2 className="head-all head-start" onClick={()=>navigate("/")}>
-        <span>Origin</span>Trade
+      <img src={image} alt="logo" className="website-logo" />
+      <h2 className="head-all head-start" onClick={() => navigate("/")}>
+        <span>Trade</span>Connect
       </h2>
       {searchVisible && (
         <div className="search-bar">
@@ -88,7 +89,14 @@ function Header() {
               icon={faShoppingCart}
               onClick={() => navigate("/account/cart")}
             />
-            <Link to="/account">My Account</Link>
+            <Link to="/account" className="header-profile-nav">
+              <img
+                src={profileImageAccessUrl + user?.profileImage}
+                alt="profile"
+                className="header-profile-icon"
+              />
+              My Account
+            </Link>
           </div>
         ) : (
           <Link to="/form">Login / Signup</Link>

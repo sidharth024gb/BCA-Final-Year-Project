@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
+import Carousel from "../Carousel/Carousel";
+import "./Card.css";
 
 function RelatedItems({ Tags, Category, Id }) {
   const { products, user, authToken, addToCart } = useContext(AppContext);
@@ -32,38 +34,14 @@ function RelatedItems({ Tags, Category, Id }) {
     }
   }, [products, Tags, Category, user, authToken, Id]);
 
-  if (!relatedItems) {
-    return (
-      <div>
-        <h1>No Related Items Found</h1>
-      </div>
-    );
+  if (relatedItems.length === 0) {
+    return <></>;
   }
 
   return (
-    <div>
-      {relatedItems.map((item, index) => {
-        return (
-          <Link to="/card" state={item} key={index}>
-            <div>
-              <h2>{item.tags}</h2>
-              <p>{item.itemName}</p>
-              <p>{item.price}</p>
-              <p>{item.discount}</p>
-              <p>{item.deliveryOption}</p>
-              <p>{item.location}</p>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  addToCart(item.item_id, item.category, item.seller);
-                }}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </Link>
-        );
-      })}
+    <div className="related-items box">
+      <h2>Related Items:-</h2>
+      <Carousel carouselItems={relatedItems} carouselType="products" />
     </div>
   );
 }
