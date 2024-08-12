@@ -47,6 +47,7 @@ function Account() {
     returnOrder,
     setReturnOrder,
     isRating,
+    showAlertBox,
     setIsRating,
   } = useContext(AppContext);
   const [showSellOptions, setShowSellOptions] = useState(false);
@@ -101,7 +102,8 @@ function Account() {
           isCancel ||
           orderStatus ||
           deleteConfirm ||
-          isCheckingOut
+          isCheckingOut ||
+          showAlertBox
             ? "blurred"
             : ""
         }`}

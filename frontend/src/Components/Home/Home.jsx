@@ -28,10 +28,11 @@ function Home() {
         getHomePageContent();
       }
     }
-    if (user) {
-      getHomePageContent();
-    }
-  }, [bestDeals, bestSellers, recommendations, authToken,user]);
+  }, [bestDeals, bestSellers, recommendations, authToken, user]);
+  
+  useEffect(() => {
+    getHomePageContent();
+  }, [user]);
 
   return (
     <div className="home-page flex-center flex-col pad-20 gap-20">

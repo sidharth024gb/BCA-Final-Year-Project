@@ -100,6 +100,11 @@ export const AppProvider = ({ children, navigate }) => {
     }
   }, [authToken]);
 
+  useEffect(() => {
+    filterListedItems();
+    filterCart();
+  }, [user]);
+
   function changeSearchVisiblity() {
     setSearchVisible(!searchVisible);
   }
@@ -523,6 +528,7 @@ export const AppProvider = ({ children, navigate }) => {
                         if (res.data.success) {
                           alertBox(res.data.message);
                           await getUser();
+                          filterCart();
                           setIsCheckingOut(false);
                         } else {
                           alertBox(res.data.message);
@@ -564,6 +570,7 @@ export const AppProvider = ({ children, navigate }) => {
               alertBox(res.data.message);
               setIsCheckingOut(false);
               await getUser();
+              filterCart();
             } else {
               alertBox(res.data.message);
             }

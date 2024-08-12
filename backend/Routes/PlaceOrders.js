@@ -192,6 +192,10 @@ router.post("/online/verify", async (req, res) => {
                 deliveryAddress: deliveryAddress,
                 paymentOption: paymentOption,
               });
+              await usersData.updateOne(
+                { user_id: req.user.user_id },
+                { $set: { cart: [] } }
+              );
             } else {
               return res
                 .status(400)
@@ -317,6 +321,10 @@ router.post("/cash", async (req, res) => {
               deliveryAddress: deliveryAddress,
               paymentOption: paymentOption,
             });
+            await usersData.updateOne(
+              { user_id: req.user.user_id },
+              { $set: { cart: [] } }
+            );
           } else {
             return res.status(400).send({
               sucess: false,
